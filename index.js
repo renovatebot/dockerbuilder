@@ -81,7 +81,7 @@ async function docker(cmd) {
   });
 }
 
-async function buildAndPush({ image, buildArg }, versions) {
+async function buildAndPush({ image, buildArg, buildOnly }, versions) {
   let built = [];
   let failed = [];
   for (const version of versions) {
@@ -92,7 +92,9 @@ async function buildAndPush({ image, buildArg }, versions) {
         await docker(
           `build --build-arg ${buildArg}=${version} . -t ${imageVersion}`
         );
-        await docker(`push ${imageVersion}`);
+        if (!buildOnly) {
+          await docker(`push ${imageVersion}`);
+        }
         console.log(`Built ${imageVersion}`);
         built.push(version);
       } catch (err) {
@@ -126,6 +128,7 @@ async function generateImages(config) {
     ignoredVersions: process.env.IGNORED_VERSIONS
       ? process.env.IGNORED_VERSIONS.split(',')
       : [],
+    buildOnly: !!process.env.BUILD_ONLY,
   };
   console.log(config);
   await generateImages(config);
