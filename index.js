@@ -123,7 +123,7 @@ async function generateImages(config) {
     startVersion: process.env.START_VERSION,
     image: process.env.IMAGE,
     buildArg:
-      process.env.BUILD_ARG || process.env.IMAGE.toUpperCase + '_VERSION',
+      process.env.BUILD_ARG || process.env.IMAGE.toUpperCase() + '_VERSION',
     ignoredVersions: process.env.IGNORED_VERSIONS
       ? process.env.IGNORED_VERSIONS.split(',')
       : [],
