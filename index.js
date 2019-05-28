@@ -118,10 +118,10 @@ async function buildAndPush({ image, buildArg, buildOnly }, versions) {
       }
   }
   if (built.length) {
-    console.log('built: ' + built.join(' '));
+    console.log('Build list: ' + built.join(' '));
   }
-  if (built.length) {
-    console.log('failed: ' + failed.join(' '));
+  if (failed.length) {
+    console.log('Failed list: ' + failed.join(' '));
     process.exit(-1);
   }
 }
