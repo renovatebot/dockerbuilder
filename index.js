@@ -26,7 +26,7 @@ async function tagExists(image, version) {
   }
 }
 
-async function getUnbuiltVersions({
+async function getBuildList({
   datasource,
   lookupName,
   versionScheme,
@@ -44,18 +44,18 @@ async function getUnbuiltVersions({
   rubyVersions = rubyVersions
     .filter(v => !ver.isLessThanRange(v, startVersion))
     .filter(v => !ignoredVersions.includes(v));
-  const unbuiltVersions = [];
+  const buildList = [];
   for (const version of rubyVersions) {
     if (!(await tagExists(image, version))) {
-      unbuiltVersions.push(version);
+      buildList.push(version);
     }
   }
-  if (unbuiltVersions.length) {
-    console.log('Unbuilt versions: ' + unbuiltVersions.join(' '));
+  if (buildList.length) {
+    console.log('Build list: ' + buildList.join(' '));
   } else {
-    console.log('No unbuilt versions');
+    console.log('Nothing to build');
   }
-  return unbuiltVersions;
+  return buildList;
 }
 
 async function docker(cmd) {
@@ -87,7 +87,6 @@ async function buildAndPush({ image, buildArg }, versions) {
   for (const version of versions) {
     const imageVersion = `${image}:${version}`;
     console.log(`Building ${imageVersion}`);
-    let buildArgs;
     if (buildArg)
       try {
         await docker(
@@ -111,8 +110,8 @@ async function buildAndPush({ image, buildArg }, versions) {
 }
 
 async function generateImages(config) {
-  const unbuiltVersions = await getUnbuiltVersions(config);
-  await buildAndPush(config, unbuiltVersions);
+  const buildList = await getBuildList(config);
+  await buildAndPush(config, buildList);
 }
 
 (async () => {
