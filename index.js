@@ -33,6 +33,7 @@ async function getBuildList({
   startVersion,
   ignoredVersions,
   latestOnly,
+  force,
   image,
 }) {
   console.log('Looking up versions');
@@ -50,7 +51,7 @@ async function getBuildList({
     .filter(v => !ignoredVersions.includes(v));
   const buildList = [];
   for (const version of rubyVersions) {
-    if (!(await tagExists(image, version))) {
+    if (force || !(await tagExists(image, version))) {
       buildList.push(version);
     }
   }
@@ -134,6 +135,7 @@ async function generateImages(config) {
       : [],
     buildOnly: !!process.env.BUILD_ONLY,
     latestOnly: !!process.env.LATEST_ONLY,
+    force: !!process.env.FORCE,
   };
   console.log(config);
   await generateImages(config);
