@@ -51,6 +51,7 @@ async function getBuildList({
     .filter(v => !ver.isLessThanRange(v, startVersion))
     .filter(v => !ignoredVersions.includes(v));
   const latestVersion = allVersions[allVersions.length - 1];
+  const latestStable = allVersions.filter(v => ver.isStable(v)).pop();
   if (latestOnly) {
     console.log('Using latest version only');
     allVersions = [latestVersion];
@@ -110,6 +111,10 @@ async function buildAndPush({ image, buildArg, buildOnly }, versions) {
         );
         if (!buildOnly) {
           await docker(`push ${imageVersion}`);
+          if (version === latestStable) {
+            await docker(`tag ${imageVersion} ${image}:latest`);
+            await docker(`push ${image}:latest`);
+          }
         }
         console.log(`Built ${imageVersion}`);
         built.push(version);
