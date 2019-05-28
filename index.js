@@ -32,6 +32,7 @@ async function getBuildList({
   versionScheme,
   startVersion,
   ignoredVersions,
+  latestOnly,
   image,
 }) {
   console.log('Looking up versions');
@@ -41,6 +42,9 @@ async function getBuildList({
     lookupName,
     versionScheme,
   })).releases.map(v => v.version);
+  if (latestOnly && rubyVersions.length) {
+    rubyVersions = rubyVersions.slice(0, 1);
+  }
   rubyVersions = rubyVersions
     .filter(v => !ver.isLessThanRange(v, startVersion))
     .filter(v => !ignoredVersions.includes(v));
@@ -129,6 +133,7 @@ async function generateImages(config) {
       ? process.env.IGNORED_VERSIONS.split(',')
       : [],
     buildOnly: !!process.env.BUILD_ONLY,
+    latestOnly: !!process.env.LATEST_ONLY,
   };
   console.log(config);
   await generateImages(config);
