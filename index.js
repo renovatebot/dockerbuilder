@@ -127,5 +127,6 @@ async function generateImages(config) {
       ? process.env.IGNORED_VERSIONS.split(',')
       : [],
   };
+  console.log(config);
   await generateImages(config);
 })();
