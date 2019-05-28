@@ -38,21 +38,31 @@ async function getBuildList({
 }) {
   console.log('Looking up versions');
   const ver = versioning.get(versionScheme);
-  let rubyVersions = (await getPkgReleases({
+  let allVersions = (await getPkgReleases({
     datasource,
     lookupName,
     versionScheme,
   })).releases.map(v => v.version);
-  if (latestOnly && rubyVersions.length) {
-    rubyVersions = rubyVersions.slice(0, 1);
+  console.log(`Found ${allVersions.length} total versions`);
+  if (!allVersions.length) {
+    return [];
   }
-  rubyVersions = rubyVersions
+  allVersions = allVersions
     .filter(v => !ver.isLessThanRange(v, startVersion))
     .filter(v => !ignoredVersions.includes(v));
+  if (latestOnly) {
+    console.log('Using latest version only');
+    allVersions = allVersions.slice(0, 1);
+  }
   const buildList = [];
-  for (const version of rubyVersions) {
-    if (force || !(await tagExists(image, version))) {
-      buildList.push(version);
+  if (force) {
+    console.log('Force building all versions');
+    buildList = allVersions;
+  } else {
+    for (const version of allVersions) {
+      if (force || !(await tagExists(image, version))) {
+        buildList.push(version);
+      }
     }
   }
   if (buildList.length) {
