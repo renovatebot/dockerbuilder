@@ -50,9 +50,10 @@ async function getBuildList({
   allVersions = allVersions
     .filter(v => !ver.isLessThanRange(v, startVersion))
     .filter(v => !ignoredVersions.includes(v));
+  const latestVersion = allVersions[allVersions.length - 1];
   if (latestOnly) {
     console.log('Using latest version only');
-    allVersions = [allVersions.pop()];
+    allVersions = [latestVersion];
   }
   let buildList = [];
   if (force) {
