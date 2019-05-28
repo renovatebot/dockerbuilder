@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 const got = require('got');
 const os = require('os');
 const { getPkgReleases } = require('renovate/dist/datasource');
