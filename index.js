@@ -104,7 +104,7 @@ async function buildAndPush({ image, buildArg, buildOnly }, versions) {
   let built = [];
   let failed = [];
   for (const version of versions) {
-    const imageVersion = `${image}:${version}`;
+    const imageVersion = `renovate/${image}:${version}`;
     console.log(`Building ${imageVersion}`);
     if (buildArg)
       try {
@@ -114,8 +114,8 @@ async function buildAndPush({ image, buildArg, buildOnly }, versions) {
         if (!buildOnly) {
           await docker(`push ${imageVersion}`);
           if (version === latestStable) {
-            await docker(`tag ${imageVersion} ${image}:latest`);
-            await docker(`push ${image}:latest`);
+            await docker(`tag ${imageVersion} renovate/${image}:latest`);
+            await docker(`push renovate/${image}:latest`);
           }
         }
         console.log(`Built ${imageVersion}`);
