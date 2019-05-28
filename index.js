@@ -26,13 +26,15 @@ async function tagExists(image, version) {
   }
 }
 
+let lastestStable;
+
 async function getBuildList({
   datasource,
   lookupName,
   versionScheme,
   startVersion,
   ignoredVersions,
-  latestOnly,
+  lastOnly,
   force,
   image,
 }) {
@@ -50,11 +52,11 @@ async function getBuildList({
   allVersions = allVersions
     .filter(v => !ver.isLessThanRange(v, startVersion))
     .filter(v => !ignoredVersions.includes(v));
-  const latestVersion = allVersions[allVersions.length - 1];
-  const latestStable = allVersions.filter(v => ver.isStable(v)).pop();
-  if (latestOnly) {
-    console.log('Using latest version only');
-    allVersions = [latestVersion];
+  latestStable = allVersions.filter(v => ver.isStable(v)).pop();
+  const lastVersion = allVersions[allVersions.length - 1];
+  if (lastOnly) {
+    console.log('Building last version only');
+    allVersions = [lastVersion];
   }
   let buildList = [];
   if (force) {
@@ -150,7 +152,7 @@ async function generateImages(config) {
       ? process.env.IGNORED_VERSIONS.split(',')
       : [],
     buildOnly: !!process.env.BUILD_ONLY,
-    latestOnly: !!process.env.LATEST_ONLY,
+    lastOnly: !!process.env.LAST_ONLY,
     force: !!process.env.FORCE,
   };
   if (
@@ -159,7 +161,7 @@ async function generateImages(config) {
   ) {
     console.log('CircleCI branch detected - Force building latest, no push');
     config.buildOnly = true;
-    config.latestOnly = true;
+    config.lastOnly = true;
     config.force = true;
   }
   console.log(config);
