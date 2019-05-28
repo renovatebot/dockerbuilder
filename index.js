@@ -36,6 +36,7 @@ async function getBuildList({
   ignoredVersions,
   lastOnly,
   force,
+  forceUnstable,
   image,
 }) {
   console.log('Looking up versions');
@@ -60,8 +61,13 @@ async function getBuildList({
   }
   let buildList = [];
   if (force) {
-    console.log('Force building all versions');
-    buildList = allVersions;
+    if (forceUnstable) {
+      console.log('Force building all versions');
+      buildList = allVersions;
+    } else {
+      console.log('Force building all stable versions');
+      buildList = allVersions.filter(v => v === lastVersion || ver.isStable(v));
+    }
   } else {
     for (const version of allVersions) {
       if (force || !(await tagExists(image, version))) {
@@ -154,6 +160,7 @@ async function generateImages(config) {
     buildOnly: !!process.env.BUILD_ONLY,
     lastOnly: !!process.env.LAST_ONLY,
     force: !!process.env.FORCE,
+    forceUnstable: !!process.env.FORCE_UNSTABLE,
   };
   if (
     process.env.CIRCLECI === 'true' &&
