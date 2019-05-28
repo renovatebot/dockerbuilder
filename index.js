@@ -36,12 +36,12 @@ async function getUnbuiltVersions({
 }) {
   console.log('Looking up versions');
   const ver = versioning.get(versionScheme);
-  const rubyVersions = (await getPkgReleases({
+  let rubyVersions = (await getPkgReleases({
     datasource,
     lookupName,
     versionScheme,
-  })).releases
-    .map(v => v.version)
+  })).releases.map(v => v.version);
+  rubyVersions = rubyVersions
     .filter(v => !ver.isLessThanRange(v, startVersion))
     .filter(v => !ignoredVersions.includes(v));
   const unbuiltVersions = [];
