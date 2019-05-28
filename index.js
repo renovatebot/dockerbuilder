@@ -147,6 +147,15 @@ async function generateImages(config) {
     latestOnly: !!process.env.LATEST_ONLY,
     force: !!process.env.FORCE,
   };
+  if (
+    process.env.CIRCLECI === 'true' &&
+    process.env.CIRCLE_BRANCH !== 'master'
+  ) {
+    console.log('CircleCI branch detected - Force building latest, no push');
+    config.buildOnly = true;
+    config.latestOnly = true;
+    config.force = true;
+  }
   console.log(config);
   await generateImages(config);
 })();
