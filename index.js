@@ -54,7 +54,7 @@ async function getBuildList({
     console.log('Using latest version only');
     allVersions = allVersions.slice(0, 1);
   }
-  const buildList = [];
+  let buildList = [];
   if (force) {
     console.log('Force building all versions');
     buildList = allVersions;
