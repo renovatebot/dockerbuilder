@@ -52,7 +52,7 @@ async function getBuildList({
     .filter(v => !ignoredVersions.includes(v));
   if (latestOnly) {
     console.log('Using latest version only');
-    allVersions = allVersions.slice(0, 1);
+    allVersions = [allVersions.pop()];
   }
   let buildList = [];
   if (force) {
