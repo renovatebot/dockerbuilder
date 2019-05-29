@@ -47,7 +47,10 @@ async function getBuildList({
     lookupName,
     lookupType,
     versionScheme,
-  })).releases.map(v => v.version);
+  })).releases
+    .map(v => v.version)
+    .filter(v => ver.isVersion(v))
+    .map(v => v.replace(/^v/, ''));
   console.log(`Found ${allVersions.length} total versions`);
   if (!allVersions.length) {
     return [];
