@@ -44,6 +44,7 @@ async function getBuildList({
   let allVersions = (await getPkgReleases({
     datasource,
     lookupName,
+    lookupType,
     versionScheme,
   })).releases.map(v => v.version);
   console.log(`Found ${allVersions.length} total versions`);
@@ -148,6 +149,7 @@ async function generateImages(config) {
 (async () => {
   const config = {
     datasource: process.env.DATASOURCE,
+    lookupType: process.env.LOOKUP_TYPE,
     lookupName: process.env.LOOKUP_NAME,
     versionScheme: process.env.VERSION_SCHEME,
     startVersion: process.env.START_VERSION,
