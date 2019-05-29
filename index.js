@@ -143,8 +143,14 @@ async function buildAndPush({ image, buildArg, buildOnly }, versions) {
 }
 
 async function generateImages(config) {
-  const buildList = await getBuildList(config);
-  await buildAndPush(config, buildList);
+  try {
+    const buildList = await getBuildList(config);
+    await buildAndPush(config, buildList);
+  } catch (err) {
+    console.log('Error in dockerbuilder');
+    console.log(err);
+    process.exit(-1);
+  }
 }
 
 (async () => {
