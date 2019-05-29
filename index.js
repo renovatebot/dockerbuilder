@@ -30,6 +30,7 @@ let lastestStable;
 
 async function getBuildList({
   datasource,
+  lookupType,
   lookupName,
   versionScheme,
   startVersion,
