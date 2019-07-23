@@ -42,12 +42,13 @@ async function getBuildList({
 }) {
   console.log('Looking up versions');
   const ver = versioning.get(versionScheme);
-  let allVersions = (await getPkgReleases({
+  const pkgResult = await getPkgReleases({
     datasource,
     lookupName,
     lookupType,
     versionScheme,
-  })).releases
+  });
+  let allVersions = pkgResult.releases
     .map(v => v.version)
     .filter(v => ver.isVersion(v))
     .map(v => v.replace(/^v/, ''));
@@ -58,8 +59,12 @@ async function getBuildList({
   allVersions = allVersions
     .filter(v => !ver.isLessThanRange(v, startVersion))
     .filter(v => !ignoredVersions.includes(v));
-  latestStable = allVersions.filter(v => ver.isStable(v)).pop();
+  console.log(`Found ${allVersions.length} versions within our range`);
+  const latestStable =
+    pkgResult.latestVersion || allVersions.filter(v => ver.isStable(v)).pop();
+  console.log('Latest stable version is ' + latestStable);
   const lastVersion = allVersions[allVersions.length - 1];
+  console.log('Most recent version is ' + latestStable);
   if (lastOnly) {
     console.log('Building last version only');
     allVersions = [lastVersion];
@@ -74,6 +79,7 @@ async function getBuildList({
       buildList = allVersions.filter(v => v === lastVersion || ver.isStable(v));
     }
   } else {
+    console.log('Checking to see which versions need to be built');
     for (const version of allVersions) {
       if (force || !(await tagExists(image, version))) {
         buildList.push(version);
