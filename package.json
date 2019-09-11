@@ -11,6 +11,6 @@
   "dependencies": {
     "fs-extra": "8.0.1",
     "got": "9.6.0",
-    "renovate": "^18.0.0"
+    "renovate": "18.2.6"
   }
 }
