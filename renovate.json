@@ -3,5 +3,12 @@
     "config:base",
     ":maintainLockFilesWeekly"
   ],
+  "packageRules": [
+    {
+      "packageNames": ["renovate"],
+      "automerge": true,
+      "automergeType": "branch"
+    }
+  ],
   "masterIssue": true
 }
