@@ -3,12 +3,9 @@
 const got = require('got');
 const os = require('os');
 const { getPkgReleases } = require('renovate/dist/datasource');
-const { initLogger } = require('renovate/dist/logger');
 const cache = require('renovate/dist/workers/global/cache');
 const versioning = require('renovate/dist/versioning');
 const { spawn } = require('child_process');
-
-initLogger();
 
 if (!global.renovateCache) {
   cache.init(os.tmpdir());
