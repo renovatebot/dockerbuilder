@@ -6,8 +6,7 @@
   "packageRules": [
     {
       "packageNames": ["renovate"],
-      "automerge": true,
-      "automergeType": "branch"
+      "automerge": true
     }
   ],
   "masterIssue": true
