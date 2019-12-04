@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "fs-extra": "8.1.0",
-    "got": "9.6.0",
+    "got": "10.0.1",
     "renovate": "19.74.5"
   }
 }
